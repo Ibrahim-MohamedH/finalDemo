@@ -5,6 +5,7 @@ require_once 'C:/xampp/htdocs/finalDemo/app/dbconfig.php';
 require_once "../shared/head.php";
 require_once "../shared/navbar.php";
 
+auth(2, 3);
 if (isset($_GET['delete'])) {
   $id = $_GET['delete'];
   $selectOneQuery = "SELECT `image` FROM `employees` where id = $id";
@@ -33,11 +34,16 @@ $select = mysqli_query($con, $selectQuery);
             <th>#</th>
             <th>image</th>
             <th>name</th>
-            <th>email</th>
-            <th>phone</th>
-            <th>salary</th>
+            <?php if ($_SESSION['user']['role'] == 1 || $_SESSION['user']['role'] == 2): ?>
+              <th>email</th>
+              <th>phone</th>
+              <th>salary</th>
+            <?php endif; ?>
             <th>department</th>
-            <th>Action</th>
+
+            <?php if ($_SESSION['user']['role'] == 1 || $_SESSION['user']['role'] == 2): ?>
+              <th>Action</th>
+            <?php endif; ?>
           </tr>
         </thead>
         <tbody>
@@ -46,14 +52,23 @@ $select = mysqli_query($con, $selectQuery);
               <td><?= $index + 1 ?></td>
               <td><img width="100" src="./uploads/<?= $employee['image'] ?>" alt=""></td>
               <td><?= $employee['name'] ?></td>
-              <td><?= $employee['email'] ?></td>
-              <td><?= $employee['phone'] ?></td>
-              <td><?= $employee['salary'] ?>$ USD</td>
+              <?php if ($_SESSION['user']['role'] == 1 || $_SESSION['user']['role'] == 2): ?>
+                <td><?= $employee['email'] ?></td>
+                <td><?= $employee['phone'] ?></td>
+                <td><?= $employee['salary'] ?>$ USD</td>
+              <?php endif; ?>
               <td><?= $employee['department'] ?></td>
-              <td>
-                <a href="edit.php?edit=<?= $employee['id'] ?>" class="btn btn-warning">Edit</a>
-                <a href="?delete=<?= $employee['id'] ?>" class="btn btn-danger">Delete</a>
-              </td>
+              <?php if ($_SESSION['user']['role'] == 1 || $_SESSION['user']['role'] == 2): ?>
+                <td>
+
+                  <?php if ($_SESSION['user']['role'] == 1): ?>
+                    <a href="edit.php?edit=<?= $employee['id'] ?>" class="btn btn-warning">Edit</a>
+                  <?php else: ?>
+                    <a disabled class="btn btn-warning disabled">Edit</a>
+                  <?php endif; ?>
+                  <a href="?delete=<?= $employee['id'] ?>" class="btn btn-danger">Delete</a>
+                </td>
+              <?php endif; ?>
             </tr>
           <?php endforeach; ?>
         </tbody>

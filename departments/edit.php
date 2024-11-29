@@ -4,6 +4,7 @@ require_once 'C:/xampp/htdocs/finalDemo/app/dbconfig.php';
 // UI
 require_once "../shared/head.php";
 require_once "../shared/navbar.php";
+auth();
 $message = '';
 if (isset($_GET['edit'])) {
   $id = $_GET['edit'];

@@ -46,3 +46,16 @@ function imageValidation($image_name, $image_size, $limitSize)
     return false;
   }
 }
+
+function auth($num1 = null, $num2 = null)
+{
+  if (isset($_SESSION['user'])) {
+    if ($_SESSION['user']['role'] == 1 || $_SESSION['user']['role'] == $num1 || $_SESSION['user']['role'] == $num2) {
+      return true;
+    } else {
+      path("401.php");
+    }
+  } else {
+    path('login.php');
+  }
+}

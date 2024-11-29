@@ -4,6 +4,7 @@ require_once 'C:/xampp/htdocs/finalDemo/app/dbconfig.php';
 // UI
 require_once "../shared/head.php";
 require_once "../shared/navbar.php";
+auth();
 $AllDepartments = "SELECT * FROM `Departments`";
 $departments = mysqli_query($con, $AllDepartments);
 if (isset($_GET["edit"])) {

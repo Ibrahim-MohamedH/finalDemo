@@ -1,6 +1,7 @@
 <?php
 // core
 require_once "C:/xampp/htdocs/finalDemo/app/functions.php";
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">

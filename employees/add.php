@@ -5,6 +5,7 @@ require_once 'C:/xampp/htdocs/finalDemo/app/functions.php';
 // UI
 require_once "../shared/head.php";
 require_once "../shared/navbar.php";
+auth();
 $message = '';
 $AllDepartments = "SELECT * FROM `Departments`";
 $departments = mysqli_query($con, $AllDepartments);
@@ -16,6 +17,7 @@ if (isset($_POST['submit'])) {
   $email = filterString($_POST['email']);
   $phone = filterString($_POST['phone']);
   $salary = filterString($_POST['salary']);
+  $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
   $department_id = $_POST['department'];
   if (stringValidation($name, 8)) {
     $errors[] = "Employee name is required and it must be at least 8 chars";
@@ -40,7 +42,7 @@ if (isset($_POST['submit'])) {
     $errors[] = "Image is required and it must be less than 2MB";
   }
   if (empty($errors)) {
-    $insertQuery = "INSERT INTO `employees` VALUES (NULL, '$name', '$email', '$phone', $salary, '$image_name', $department_id)";
+    $insertQuery = "INSERT INTO `employees` VALUES (NULL, '$name', '$email', '$phone', $salary, '$image_name', '$password', $department_id)";
     $insert = mysqli_query($con, $insertQuery);
     if ($insert) {
       move_uploaded_file($tmp_name, $location);
@@ -77,6 +79,10 @@ if (isset($_POST['submit'])) {
         <div class="mb-3">
           <label for="email" class="form-label">Email:</label>
           <input type="email" placeholder="Email" name="email" id="email" class="form-control">
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password:</label>
+          <input type="password" placeholder="Password" name="password" id="password" class="form-control">
         </div>
         <div class="mb-3">
           <label for="phone" class="form-label">Phone:</label>

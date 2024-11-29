@@ -7,9 +7,14 @@ require_once "../shared/navbar.php";
 
 if (isset($_GET['delete'])) {
   $id = $_GET['delete'];
+  $selectOneQuery = "SELECT `image` FROM `employees` where id = $id";
+  $selectOne = mysqli_query($con, $selectOneQuery);
+  $row = mysqli_fetch_assoc($selectOne);
+  $old_image = $row['image'];
   $deleteQuery = "DELETE FROM `employees` WHERE id = $id";
   $delete = mysqli_query($con, $deleteQuery);
   if ($delete) {
+    unlink("./uploads/" . $old_image);
     path('employees/index.php');
   }
 }
@@ -26,6 +31,7 @@ $select = mysqli_query($con, $selectQuery);
         <thead>
           <tr>
             <th>#</th>
+            <th>image</th>
             <th>name</th>
             <th>email</th>
             <th>phone</th>
@@ -38,6 +44,7 @@ $select = mysqli_query($con, $selectQuery);
           <?php foreach ($select as $index => $employee): ?>
             <tr>
               <td><?= $index + 1 ?></td>
+              <td><img width="100" src="./uploads/<?= $employee['image'] ?>" alt=""></td>
               <td><?= $employee['name'] ?></td>
               <td><?= $employee['email'] ?></td>
               <td><?= $employee['phone'] ?></td>

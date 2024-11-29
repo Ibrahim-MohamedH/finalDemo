@@ -17,7 +17,20 @@ if (isset($_GET["edit"])) {
     $phone = $_POST['phone'];
     $salary = $_POST['salary'];
     $department_id = $_POST['department'];
-    $updateQuery = "UPDATE `employees` SET `name`='$name',`email`='$email',`phone`='$phone',`salary`=$salary,`department_id`=$department_id WHERE id = $id";
+
+    // upload image
+    if ($_FILES["image"]['name']) {
+      $image_name = "finalDemo.com_" . time() . "_" . $_FILES["image"]['name'];
+      $tmp_name = $_FILES['image']['tmp_name'];
+      $location = './uploads/' . $image_name;
+      move_uploaded_file($tmp_name, $location);
+      $old_image = $row['image'];
+      unlink("./uploads/" . $old_image);
+    } else {
+      $image_name = $row['image'];
+    }
+
+    $updateQuery = "UPDATE `employees` SET `name`='$name',`email`='$email',`phone`='$phone',`salary`=$salary, `image`= '$image_name',`department_id`=$department_id WHERE id = $id";
     $update = mysqli_query($con, $updateQuery);
     if ($update) {
       path('employees/index.php');
@@ -37,7 +50,7 @@ if (isset($_GET["edit"])) {
   <?php endif; ?>
   <div class="card bg-dark text-light">
     <div class="card-body">
-      <form method="post">
+      <form method="post" enctype="multipart/form-data">
         <div class="mb-3">
           <label for="name" class="form-label">Name:</label>
           <input type="text" value='<?= $row['name'] ?>' placeholder="Name" name="name" id="name" class="form-control">
@@ -65,6 +78,11 @@ if (isset($_GET["edit"])) {
               <?php endif; ?>
             <?php endforeach; ?>
           </select>
+        </div>
+        <div class="mb-3">
+          <label for="image" class="form-label">Image:</label>
+          <input type="file" class="form-control mb-2" name="image">
+          <img width="200" src="./uploads/<?= $row['image'] ?>" alt="">
         </div>
         <div class=" text-center">
           <button class="btn btn-warning" name="update">Update</button>
